@@ -1,0 +1,290 @@
+\section{A signal-to-decision specification using significance and replication signals}
+\label{app:snr-example}
+
+We illustrate decision theoretic signal-to-decision specification using a stylized version of the signal-to-noise ratio model in \citet{vanzwet2026}. The authors 
+use maximum likelihood to estimate a latent distribution of signal-to-noise ratios from a sample of absolute $z$-values. In this model, significance and whether an exact replication was successful are noisy functions of the underlying signal-to-noise ratio. We consider the value of these signals for review decision-making, considering two possible definitions of the latent epistemic state on which decision quality depends.
+
+\subsection{Decision problem setup}
+
+\paragraph{Action, general latent state, utility function.}
+The reviewer face a binary action, $\mathcal{A}=\{\mathrm{do\ not\ flag},\mathrm{flag}\}$. The intended use of the signal is to decide whether to flag a claim for evidential fragility. Let $\theta \in \{0,1\}$
+denote the latent epistemic state, where $\theta=1$ means the claim satisfies the epistemic property of interest and $\theta=0$ means it does not. Below we define two different candidate epistemic states of whether the study has sufficiently high signal-to-noise and whether the observed effect has the correct sign.
+
+We use a simple symmetric utility function:
+\[
+u(a,\theta)=
+\begin{cases}
+1, & a=\mathrm{do\ not\ flag} \text{ and } \theta=1,\\
+1, & a=\mathrm{flag} \text{ and } \theta=0,\\
+0, & \text{otherwise}.
+\end{cases}
+\]
+Note that under this utility function, the Bayes-optimal reviewer flags whenever
+\[
+P(\theta=0 \mid S) > \frac{1}{2},
+\]
+or equivalently does not flag whenever
+\[
+P(\theta=1 \mid S) > \frac{1}{2}.
+\]
+
+\paragraph{Specific latent state, signals, and data-generating model.}
+Let $\Lambda$ denote the (unobservable) signal-to-noise ratio of a reported estimate. Following the signal-to-noise model assumed by \citep{vanzwet2026}, % in which $z$-values are equivalent to signal-to-noise ratios plus independent standard normal errors,  assume
+%\[
+$\Lambda \sim H$, 
+%\]
+where \(H\) is a corpus-level distribution of signal-to-noise ratios. The original study produces an observed test statistic ($z$-value) under the assumption that $z$-values are equivalent to signal-to-noise ratios plus independent standard normal errors,
+\[
+Z  = \Lambda + \epsilon, \epsilon \sim \mathcal{N}(0,1).
+\]
+Similarly, an exact replication produces
+\[
+Z_{\text{rep}} = \Lambda + \epsilon, \epsilon \sim \mathcal{N}(0,1), \text{where} Z \perp \! \! \! \perp Z_{\text{rep}} \mid \Lambda.
+%Z_{\mathrm{rep}} \mid \Lambda=\lambda \sim \mathcal{N}(\lambda,1),
+\]
+with \(Z\) and \(Z_{\mathrm{rep}}\) conditionally independent given \(\Lambda\).
+
+We consider two latent epistemic states under these assumptions. The first is whether the study has a \textbf{sufficiently high signal-to-noise ratio} for the intended decision: 
+\[
+\theta_{\mathrm{snr}}
+=
+\mathbb{I}(|\Lambda|\geq \lambda_0).
+\]
+where $\lambda_0>0$ denotes a threshold chosen for the decision context.
+
+
+The second is whether the observed effect has the \textbf{correct sign}:
+\[
+\theta_{\mathrm{sign}}
+=
+\mathbb{I}(\Lambda Z>0).
+\]
+
+
+We also consider two observable signals. The first is the \textbf{original study $z$-value},
+\[
+S_Z = Z.
+\]
+This signal can be coarsened to a statistical significance indicator,
+\[
+S_{\mathrm{sig}}=\mathbb{I}(|Z|\geq 1.96).
+\]
+The second is \textbf{exact replication success}:
+\[
+S_{\mathrm{rep}}
+=
+\mathbb{I}(ZZ_{\mathrm{rep}}>0,\ |Z_{\mathrm{rep}}|\geq 1.96),
+\]
+which indicates that the exact replication is statistically significant in the same direction as the original result.
+
+Below, we condition on the observed original statistic \(Z=z\) and the observed replication-success signal \(S_{\mathrm{rep}}\). This avoids ambiguity about the direction of the original effect.
+
+\subsection{Posterior distributions}
+\paragraph{Posterior over signal-to-noise ratio.}
+We first define the posterior distribution over the signal-to-noise ratio. Posterior distributions for both latent epistemic states depend on this posterior, as they express the fraction of the signal-to-noise ratio posterior mass that satisfies the condition defined by $\theta$.
+
+
+After observing $Z=z$, the posterior density evaluated at $\Lambda=\lambda$ is
+\[
+p_{\Lambda|Z}(\lambda \mid z)
+=
+\frac{\phi(z-\lambda)h(\lambda)}
+{\int \phi(z-\lambda')h(\lambda')\,d\lambda'},
+\]
+where \(h\) is the density of \(H\) and \(\phi\) is the standard normal density.
+
+If the reviewer also observes replication success \(S_{\mathrm{rep}}=s_{\mathrm{rep}}\), then
+\[
+p_{\Lambda|Z,S_{\text{rep}}}(\lambda \mid z,s_{\mathrm{rep}})
+\propto
+\phi(z-\lambda)
+P(S_{\mathrm{rep}}=s_{\mathrm{rep}}\mid z,\lambda)
+h(\lambda).
+\]
+For \(z>0\),
+\[
+P(S_{\mathrm{rep}}=1\mid z,\lambda)
+=
+1-\Phi(1.96-\lambda),
+\]
+and for \(z<0\),
+\[
+P(S_{\mathrm{rep}}=1\mid z,\lambda)
+=
+\Phi(-1.96-\lambda).
+\]
+In either case,
+\[
+P(S_{\mathrm{rep}}=0\mid z,\lambda)
+=
+1-P(S_{\mathrm{rep}}=1\mid z,\lambda).
+\]
+
+\paragraph{Posterior over sufficient signal-to-noise ratio.}
+%A second possible latent state is whether the study has sufficiently high signal-to-noise for the intended review decision. 
+
+After observing \(Z=z\),
+\[
+P(\theta_{\mathrm{snr}}=1\mid z)
+=
+\int \mathbb{I}(|\lambda|\geq \lambda_0)p_{\Lambda|Z}(\lambda\mid z)\,d\lambda.
+\]
+After observing both \(Z=z\) and \(S_{\mathrm{rep}}=s_{\mathrm{rep}}\),
+\[
+P(\theta_{\mathrm{snr}}=1\mid z,s_{\mathrm{rep}})
+=
+\int \mathbb{I}(|\lambda|\geq \lambda_0)p_{\Lambda|Z,S_{\text{rep}}}(\lambda\mid z,s_{\mathrm{rep}})\,d\lambda.
+\]
+
+
+\paragraph{Posterior over correct sign.}
+%One possible latent epistemic state is whether the observed effect has the correct sign:
+%\[
+%\theta_{\mathrm{sign}} = \mathbb{I}(\Lambda Z>0).
+%\]
+After observing \(Z=z\), the posterior probability that the sign is correct is
+\[
+P(\theta_{\mathrm{sign}}=1\mid z)
+=
+\int \mathbb{I}(\lambda z>0)p_{\Lambda|Z}(\lambda\mid z)\,d\lambda.
+\]
+After observing both \(Z=z\) and replication success \(S_{\mathrm{rep}}=s_{\mathrm{rep}}\), the posterior probability becomes
+\[
+P(\theta_{\mathrm{sign}}=1\mid z,s_{\mathrm{rep}})
+=
+\int \mathbb{I}(\lambda z>0)p_{\Lambda|Z,S_{\text{rep}}}(\lambda\mid z,s_{\mathrm{rep}})\,d\lambda.
+\]
+
+
+\subsection{Quantifying the value of the signals}
+\paragraph{Baseline value without signals.}
+For either target state \(\theta \in \{\theta_{\mathrm{sign}},\theta_{\mathrm{snr}}\}\), let \(p(\theta)\) denote the prior probability of the favorable state before observing any signal. The expected value of the best prior-only action is
+\[
+V_0(\theta)
+=
+\max_{a\in\mathcal{A}}
+\mathbb{E}_{\theta}[u(a,\theta)].
+\]
+
+Using \citet{vanzwet2026}'s data, the baseline for sufficient signal-to-noise ratio is $0.695$. The baseline for correct sign is $0.793$.
+
+
+%Under the binary utility above,
+%\[
+%V_0(\theta)
+%=
+%\max\{P(\theta=1),P(\theta=0)\}.
+%\]
+
+\paragraph{Benchmark value with both signals.}
+Let
+\[
+S_{\mathrm{both}}=(Z,S_{\mathrm{rep}}).
+\]
+The benchmark for observing both signals is
+\[
+V_{\mathrm{both}}(\theta)
+=
+\mathbb{E}_{S_{\mathrm{both}}}
+\left[
+\max_{a\in\mathcal{A}}
+\mathbb{E}_{\theta\mid S_{\mathrm{both}}}[u(a,\theta)]
+\right],
+\]
+which is $0.795$ ($\theta_{\mathrm{sign}}$), $0.930$ ($\theta_{\mathrm{snr}}$).
+
+The value of observing both signals is
+\[
+\Delta_{\mathrm{both}}(\theta)
+=
+V_{\mathrm{both}}(\theta)-V_0(\theta),
+\]
+or $0.002$ ($\theta_{\mathrm{sign}}$), $0.235$ ($\theta_{\mathrm{snr}}$).
+
+\paragraph{Benchmark value with the original $z$-value alone.}
+The benchmark for observing only the original $z$ statistic \(Z\) is
+\[
+V_Z(\theta)
+=
+\mathbb{E}_{Z}
+\left[
+\max_{a\in\mathcal{A}}
+\mathbb{E}_{\theta\mid Z}[u(a,\theta)]
+\right],
+\]
+which is $0.794$ ($\theta_{\mathrm{sign}}$), $0.905$ ($\theta_{\mathrm{snr}}$).
+
+The value of the original $z$-value alone is
+\[
+\Delta_Z(\theta)
+=
+V_Z(\theta)-V_0(\theta),
+\]
+which is $0.000$ ($\theta_{\mathrm{sign}}$), $0.210$ ($\theta_{\mathrm{snr}}$).
+
+
+If the coarser significance signal is used instead of the full \(Z\)-value, $Z$ is replaced with
+\[
+S_{\mathrm{sig}}=\mathbb{I}(|Z|\geq 1.96)
+\]
+throughout. The corresponding benchmark is
+\[
+V_{\mathrm{sig}}(\theta)
+=
+\mathbb{E}_{S_{\mathrm{sig}}}
+\left[
+\max\{
+P(\theta=1\mid S_{\mathrm{sig}}),
+P(\theta=0\mid S_{\mathrm{sig}})
+\}
+\right],
+\]
+which is $0.793$ ($\theta_{\mathrm{sign}}$), $0.881$ ($\theta_{\mathrm{snr}}$).
+
+The value of the significance signal is 
+\[
+\Delta_{\mathrm{sig}}(\theta)
+=
+V_{\mathrm{sig}}(\theta)-V_0(\theta),
+\]
+or $0.000$ ($\theta_{\mathrm{sign}}$), $0.186$ ($\theta_{\mathrm{snr}}$).
+
+\paragraph{Benchmark value with replication success alone.}
+The benchmark for observing only exact replication success is
+\[
+V_{\mathrm{rep}}(\theta)
+=
+\mathbb{E}_{S_{\mathrm{rep}}}
+\left[
+\max_{a\in\mathcal{A}}
+\mathbb{E}_{\theta\mid S_{\mathrm{rep}}}[u(a,\theta)]
+\right],
+\]
+which is $0.793$ ($\theta_{\mathrm{sign}}$), $0.899$ ($\theta_{\mathrm{snr}}$).
+
+The value of replication success alone is
+\[
+\Delta_{\mathrm{rep}}(\theta)
+=
+V_{\mathrm{rep}}(\theta)-V_0(\theta),
+\]
+or $0.000$ ($\theta_{\mathrm{sign}}$), $0.204$ ($\theta_{\mathrm{snr}}$).
+
+\paragraph{Incremental value of replication given the original statistic.}
+The additional marginal value of observing exact replication success after already observing the original $z$-value is
+\[
+\Delta_{\mathrm{rep}\mid Z}(\theta)
+=
+V_{\mathrm{both}}(\theta)-V_Z(\theta),
+\]
+which is equal to $0.002$ ($\theta_{\mathrm{sign}}$), $0.025$ ($\theta_{\mathrm{snr}}$).
+
+Similarly, if the reviewer observes only the coarsened significance indicator rather than the full \(Z\)-value, the additional marginal value of the replication signal is
+\[
+\Delta_{\mathrm{rep}\mid \mathrm{sig}}(\theta)
+=
+V_{(S_{\mathrm{sig}},S_{\mathrm{rep}})}(\theta)
+-
+V_{\mathrm{sig}}(\theta),
+\]
+or $0.000$ ($\theta_{\mathrm{sign}}$), $0.044$ ($\theta_{\mathrm{snr}}$).
